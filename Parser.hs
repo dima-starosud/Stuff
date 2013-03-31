@@ -161,7 +161,6 @@ basicRe = liftM2 (flip ($)) re opt where
 
 fullRe :: Parser Regex
 fullRe = liftM2 (foldl (+++)) singleRe (star $ char '|' *> singleRe) where
-    singleRe :: Parser Regex
     singleRe = fmap (toRe . sequence) $ plus basicRe
 
 regex :: String -> Regex
