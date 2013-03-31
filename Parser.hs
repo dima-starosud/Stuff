@@ -86,16 +86,7 @@ data Tree a = Leaf a | Branch [Tree a]
 instance Show a => Show (Tree a) where
     show (Leaf a) = show a
     show (Branch l) = show l
-{-
-instance Monad Tree where
-    return = Leaf
-    Leaf a >>= f = f a
-    Branch xs >>= f = Branch $ map (>>= f) xs
 
-instance Functor Tree where
-    fmap f (Leaf a) = Leaf $ f a
-    fmap f (Branch xs) = Branch $ map (fmap f) xs
--}
 type Regex = Parser (Tree Char)
 
 class Treeable a where
