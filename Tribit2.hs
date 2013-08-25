@@ -153,7 +153,7 @@ run :: Tribit Bit -> IO ()
 run t = do print t
            unless (isBit t)
                   (run $ fromMaybe
-                           (error "Runtime error: wrong bit length")
+                           (error "Runtime error:\nCannot reduce or rewrite")
                            (reduce t <|> rewrite t))
 
 main :: IO ()
