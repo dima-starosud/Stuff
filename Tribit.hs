@@ -43,6 +43,10 @@ isBit _ = False
 sequenceA :: (Applicative f) => Triangle (f a) -> f (Triangle a)
 sequenceA (Triangle a1 a2 a3 a4) = Triangle <$> a1 <*> a2 <*> a3 <*> a4
 
+{- Analogue of Traversable traverse -}
+traverse :: (Applicative f) => (a -> f b) -> Triangle a -> f (Triangle b)
+traverse f t = sequenceA $ fmap f t
+
 reverseT :: Triangle a -> Triangle a
 reverseT (Triangle a1 a2 a3 a4) = (Triangle a4 a3 a2 a1)
 
@@ -92,7 +96,7 @@ reduceT _ = Nothing
 
 reduceMT :: SNat n -> MultiTriangle (S n) -> Maybe (MultiTriangle n)
 reduceMT SZ = reduceT
-reduceMT (SS n) = sequenceA . fmap (reduceMT n)
+reduceMT (SS n) = traverse (reduceMT n)
 
 {-
   "Infinite" variant of reduce: returned value cannot be reduced.
@@ -141,7 +145,7 @@ rconcat = reverse . concat
  -}
 tryCastMT :: SNat n -> SNat m -> MultiTriangle m -> Maybe (MultiTriangle n)
 tryCastMT SZ SZ t = Just t
-tryCastMT (SS n) (SS m) t = sequenceA $ fmap (tryCastMT n m) t
+tryCastMT (SS n) (SS m) t = traverse (tryCastMT n m) t
 tryCastMT _ _ _ = Nothing
 
 tryCast :: SNat n -> Tribit -> Maybe (MultiTriangle n)
